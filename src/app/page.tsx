@@ -1,3 +1,4 @@
+// src/app/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -40,8 +41,10 @@ export default function Home() {
           end: e.end ? new Date(e.end) : undefined,
         }))
       );
-    } catch (err: any) {
-      setError(err?.message ?? "Something went wrong while parsing.");
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "Something went wrong while parsing.";
+      setError(msg);
     } finally {
       setLoading(null);
     }
@@ -75,8 +78,10 @@ export default function Home() {
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-    } catch (err: any) {
-      setError(err?.message ?? "Could not create .ics file.");
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "Could not create .ics file.";
+      setError(msg);
     } finally {
       setLoading(null);
     }
@@ -145,9 +150,7 @@ export default function Home() {
       {hasEvents && (
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">Preview &amp; edit</h2>
-          <div className="text-xs opacity-70">
-            Tip: click fields to edit; times are local.
-          </div>
+          <div className="text-xs opacity-70">Tip: click fields to edit; times are local.</div>
 
           <div className="overflow-auto border rounded">
             <table className="w-full text-sm">
@@ -176,9 +179,7 @@ export default function Home() {
                       <input
                         className="w-full bg-transparent border rounded px-2 py-1"
                         value={e.title}
-                        onChange={(ev) =>
-                          updateEvent(i, { title: ev.target.value })
-                        }
+                        onChange={(ev) => updateEvent(i, { title: ev.target.value })}
                       />
                     </td>
 
@@ -217,9 +218,7 @@ export default function Home() {
                           type="date"
                           className="bg-transparent border rounded px-2 py-1"
                           value={toLocalDateInput(e.end ?? e.start)}
-                          onChange={() =>
-                            updateEvent(i, { end: undefined })
-                          }
+                          onChange={() => updateEvent(i, { end: undefined })}
                         />
                       ) : (
                         <input
@@ -257,9 +256,7 @@ export default function Home() {
 
                     {/* Source */}
                     <td className="p-2 text-xs opacity-70 align-top">
-                      <div className="break-words whitespace-normal">
-                        {e.sourceLine}
-                      </div>
+                      <div className="break-words whitespace-normal">{e.sourceLine}</div>
                     </td>
                   </tr>
                 ))}
@@ -288,7 +285,6 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
-// format for <input type="datetime-local">
 function toLocalInput(d: Date) {
   if (!(d instanceof Date) || Number.isNaN(d.getTime())) return "";
   const yyyy = d.getFullYear();
@@ -299,7 +295,6 @@ function toLocalInput(d: Date) {
   return `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
 }
 
-// format for <input type="date">
 function toLocalDateInput(d: Date) {
   if (!(d instanceof Date) || Number.isNaN(d.getTime())) return "";
   const yyyy = d.getFullYear();
@@ -308,13 +303,11 @@ function toLocalDateInput(d: Date) {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-// Parse value from <input type="datetime-local"> with local time semantics.
 function fromLocalInput(value: string, fallback?: Date) {
   const d = new Date(value);
   return Number.isNaN(d.getTime()) ? (fallback ?? new Date()) : d;
 }
 
-// Build a Date at local midnight for a YYYY-MM-DD string.
 function atLocalMidnight(dateStr: string, fallback?: Date) {
   const [y, m, d] = dateStr.split("-").map(Number);
   const local = new Date(y, (m ?? 1) - 1, d ?? 1, 0, 0, 0, 0);
