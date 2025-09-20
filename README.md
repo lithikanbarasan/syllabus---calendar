@@ -1,3 +1,10 @@
+## Syllabus → Calendar
+
+Turn messy syllabus text into a clean, editable list of events and export a `.ics` file that works in Google/Apple/Outlook Calendar.
+
+**Vercel:** https://<ysyllabus-calendar>.vercel.app  
+**Repo:** https://github.com/<lithikanbarasan>/syllabus---calendar
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
